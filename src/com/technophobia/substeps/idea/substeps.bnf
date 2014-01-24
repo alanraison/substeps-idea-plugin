@@ -15,26 +15,22 @@
 
     tokens=[
         DEFINE='Define:'
-        step_part="regexp:[^<>:\n]*"
-        var_name="regexp:[^<>:\n]*"
-        sp="regexp:[ \t\f]"
+        var_start='<'
+        var_end='>'
+        text="regexp:[^<>:\n \t][^<>:\n]*"
+        eol="regexp:\n"
+        comment="regexp:^#.*\n"
     ]
 }
 
-substepsFile ::= definition*
+substepsFile ::= (definition | comment | eol)*
 
-definition ::= DEFINE sp* step_def step_impls
+definition ::= DEFINE step_def eol step_impls {pin=1}
 
-step_def ::= ( var_def | defn_part )+ '\n'
+step_impls ::= (step_def eol)*
 
-private step_impls ::= (step_impl '\n')*
+step_def ::= ( var_part | step_part )*
 
-defn_part ::= step_part
+var_part ::= var_start text var_end {pin=3}
 
-var_def ::= "<" var_name ">"
-
-step_impl ::= ( impl_part | var_usage )+
-
-impl_part ::= step_part
-
-var_usage ::= '<' var_name '>'
+step_part ::= text
