@@ -25,8 +25,11 @@ EOL="\r"|"\n"|"\r\n"
 LINE_WS=[\ \t\f]
 WHITE_SPACE=({LINE_WS}|{EOL})+
 
+DEFINE="Define:"
+VAR_START="<"
+VAR_END=">"
 END_OF_LINE_COMMENT="#"[^\r\n]*
-TEXT=[^<>\n \t][^<>\n]*
+TEXT=[^<>\ \t\f\r\n][^<>\n\r]*
 
 %state COMMENT
 %state DEF_PART, STEP
@@ -35,26 +38,23 @@ TEXT=[^<>\n \t][^<>\n]*
 %%
 <YYINITIAL, STEP> {
   {END_OF_LINE_COMMENT} { return SubstepsTokenTypes.END_OF_LINE_COMMENT; }
-}
-<YYINITIAL> {
-  {WHITE_SPACE}      { return SubstepsTokenTypes.WHITE_SPACE; }
-
-  "Define:"          { yybegin(DEF_PART); return SubstepsTokenTypes.DEF_PART; }
+  {WHITE_SPACE}         { return SubstepsTokenTypes.WHITE_SPACE; }
+  {DEFINE}              { yybegin(DEF_PART); return SubstepsTokenTypes.DEF_PART; }
 }
 
 <DEF_PART> {
-  {TEXT}             { return SubstepsTokenTypes.DEF_PART; }
-  {EOL}              { yybegin(STEP); }
+  {TEXT}                { return SubstepsTokenTypes.DEF_PART; }
+  {EOL}                 { yybegin(STEP); }
   {END_OF_LINE_COMMENT} { yybegin(STEP); return SubstepsTokenTypes.END_OF_LINE_COMMENT; }
 }
 
 <VAR> {
-  {TEXT}             {  }
-  ">"                { yybegin(previousState); }
+  {TEXT}                {  }
+  {VAR_END}             { yybegin(previousState); }
 }
 
 <DEF_PART,STEP> {
-  "<"                { previousState = yystate(); yybegin(VAR); return SubstepsTokenTypes.VARIABLE; }
+  {VAR_START}           { previousState = yystate(); yybegin(VAR); return SubstepsTokenTypes.VARIABLE; }
 }
 
 <STEP> {
