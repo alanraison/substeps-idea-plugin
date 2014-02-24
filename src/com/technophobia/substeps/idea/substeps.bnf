@@ -14,10 +14,10 @@
     tokenTypeClass="com.technophobia.substeps.idea.lexer.SubstepsToken"
 
     tokens=[
-        DEFINE='Define:'
-        var_start='<'
-        var_end='>'
-        text="regexp:[^<>:\n \t][^<>:\n]*"
+        //DEFINE='Define:'
+        //var_start='<'
+        //var_end='>'
+        text="regexp:[^:<>\n \t#][^<>:\n#]*"
         eol="regexp:\n"
         comment="regexp:^#.*\n"
     ]
@@ -25,12 +25,12 @@
 
 substepsFile ::= (definition | comment | eol)*
 
-definition ::= DEFINE step_def eol step_impls {pin=1}
+definition ::= 'Define:' step_def eol step_impls {pin=3}
 
 step_impls ::= (step_def eol)*
 
 step_def ::= ( var_part | step_part )*
 
-var_part ::= var_start text var_end {pin=3}
+var_part ::= '<' text '>' {pin=3}
 
 step_part ::= text

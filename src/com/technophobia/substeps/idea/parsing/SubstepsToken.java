@@ -1,6 +1,7 @@
-package com.technophobia.substeps.idea;
+package com.technophobia.substeps.idea.parsing;
 
 import com.intellij.psi.tree.IElementType;
+import com.technophobia.substeps.idea.SubstepsLanguage;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
