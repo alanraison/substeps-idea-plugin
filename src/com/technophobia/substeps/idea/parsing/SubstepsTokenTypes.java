@@ -8,11 +8,12 @@ import com.intellij.psi.tree.TokenSet;
  * Created by alan on 23/02/14.
  */
 public interface SubstepsTokenTypes {
+    //IFileElementType FILE = new IFileElementType("SubstepsFile",)
     IElementType WHITE_SPACE = TokenType.WHITE_SPACE;
     IElementType BAD_CHARACTER = TokenType.BAD_CHARACTER;
 
     IElementType END_OF_LINE_COMMENT = new SubstepsToken("END_OF_LINE_COMMENT");
-    IElementType DEF_PART = new SubstepsToken("DEF_PART");
+    IElementType DEFINE = new SubstepsToken("DEFINE");
     IElementType VARIABLE = new SubstepsToken("VARIABLE");
     IElementType STEP = new SubstepsToken("STEP");
 

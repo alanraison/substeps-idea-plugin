@@ -1,6 +1,6 @@
 {
-    parserClass="com.technophobia.substeps.idea.parser.SubstepsParser"
-    parserUtilClass="com.technophobia.substeps.idea.parser.SubstepsParserUtil"
+    parserClass="com.technophobia.substeps.idea.parsing.SubstepsParser"
+    parserUtilClass="com.technophobia.substeps.idea.parsing.SubstepsParserUtil"
 
     extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
 
@@ -9,28 +9,35 @@
     psiPackage="com.technophobia.substeps.idea.psi"
     psiImplPackage="com.technophobia.substeps.idea.psi.impl"
 
-    elementTypeHolderClass="com.technophobia.substeps.idea.lexer.SubstepsTypes"
-    elementTypeClass="com.technophobia.substeps.idea.lexer.SubstepsElement"
-    tokenTypeClass="com.technophobia.substeps.idea.lexer.SubstepsToken"
+    elementTypeHolderClass="com.technophobia.substeps.idea.parsing.SubstepsElementTypes"
+    elementTypeClass="com.technophobia.substeps.idea.parsing.SubstepsElement"
+    tokenTypeClass="com.technophobia.substeps.idea.parsing.SubstepsToken"
 
     tokens=[
-        //DEFINE='Define:'
-        //var_start='<'
-        //var_end='>'
-        text="regexp:[^:<>\n \t#][^<>:\n#]*"
-        eol="regexp:\n"
-        comment="regexp:^#.*\n"
+        TEXT="regexp:\w[\w \t]+"
+        DEFINE="Define:"
+        VAR_START='<'
+        VAR_END='>'
+        COMMENT_START='#'
+        LINE_WS="regexp:[ \t]"
+        eol="regexp:\s*[\n\r]+"
+        WHITE_SPACE="regexp:[ \t\n\r]"
+        END_OF_LINE_COMMENT="regexp:#[^\n\r]*[\n\r]+"
     ]
 }
 
-substepsFile ::= (definition | comment | eol)*
+substepsFile ::= (definition)*
 
-definition ::= 'Define:' step_def eol step_impls {pin=3}
+definition ::= DEFINE LINE_WS* step_def eol step_impls+
 
-step_impls ::= (step_def eol)*
+step_impls ::= LINE_WS* step_def
 
 step_def ::= ( var_part | step_part )*
 
-var_part ::= '<' text '>' {pin=3}
+var_part ::= VAR_START TEXT VAR_END LINE_WS*
 
-step_part ::= text
+step_part ::= TEXT
+
+comment ::= COMMENT_START END_OF_LINE_COMMENT
+
+comment_or_eol ::= (comment | eol)

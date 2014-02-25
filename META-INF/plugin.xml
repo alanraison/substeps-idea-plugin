@@ -1,8 +1,8 @@
 <idea-plugin version="2">
-  <id>com.yourcompany.unique.plugin.id</id>
-  <name>Plugin display name here</name>
+  <id>com.technophobia.substeps</id>
+  <name>Substeps Plugin</name>
   <version>1.0</version>
-  <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+  <vendor url="http://substeps.technophobia.com">Technophobia</vendor>
 
   <description><![CDATA[
       Plugin to support Substeps file editing
@@ -35,5 +35,7 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <fileTypeFactory implementation="com.technophobia.substeps.idea.SubstepsFileTypeFactory"/>
+    <lang.parserDefinition language="Substeps"
+        implementationClass="com.technophobia.substeps.idea.parsing.SubstepsParserDefinition"/>
   </extensions>
 </idea-plugin>
