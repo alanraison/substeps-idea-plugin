@@ -30,7 +30,7 @@ VAR_START="<"
 VAR_END=">"
 COMMENT_START="#"
 END_OF_LINE_COMMENT={COMMENT_START}[^\r\n]*
-TEXT=[^<>\ \t\f\r\n][^<>\n\r]*
+TEXT_LITERAL=[^<>\ \t\f\r\n][^<>\n\r]*
 
 %state COMMENT
 %state DEFINITION, STEP
@@ -44,13 +44,13 @@ TEXT=[^<>\ \t\f\r\n][^<>\n\r]*
 }
 
 <DEFINITION> {
-  {TEXT}                { return SubstepsElementTypes.TEXT; }
+  {TEXT_LITERAL}        { return SubstepsElementTypes.TEXT_LITERAL; }
   {EOL}                 { yybegin(STEP); }
   {END_OF_LINE_COMMENT} { yybegin(STEP); return SubstepsTokenTypes.END_OF_LINE_COMMENT; }
 }
 
 <VAR> {
-  {TEXT}                { return SubstepsElementTypes.TEXT; }
+  {TEXT_LITERAL}        { return SubstepsElementTypes.TEXT_LITERAL; }
   {VAR_END}             { yybegin(previousState); }
 }
 
@@ -59,7 +59,7 @@ TEXT=[^<>\ \t\f\r\n][^<>\n\r]*
 }
 
 <STEP> {
-  {TEXT}             { return SubstepsElementTypes.TEXT; }
+  {TEXT_LITERAL}        { return SubstepsElementTypes.TEXT_LITERAL; }
 }
 
   [^] { return SubstepsTokenTypes.BAD_CHARACTER; }

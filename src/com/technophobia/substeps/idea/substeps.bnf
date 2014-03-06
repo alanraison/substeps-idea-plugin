@@ -14,7 +14,7 @@
     tokenTypeClass="com.technophobia.substeps.idea.parsing.SubstepsToken"
 
     tokens=[
-        TEXT="regexp:\w[\w \t]+"
+        TEXT_LITERAL="regexp:\w[\w \t]*"
         DEFINE="Define:"
         VAR_START='<'
         VAR_END='>'
@@ -26,18 +26,18 @@
     ]
 }
 
-substepsFile ::= (definition)*
+substepsFile ::= definition*
 
 definition ::= DEFINE LINE_WS* step_def eol step_impls+
 
-step_impls ::= LINE_WS* step_def
+step_impls ::= LINE_WS* step_def eol
 
 step_def ::= ( var_part | step_part )*
 
-var_part ::= VAR_START TEXT VAR_END LINE_WS*
+var_part ::= VAR_START TEXT_LITERAL VAR_END LINE_WS*
 
-step_part ::= TEXT
+step_part ::= TEXT_LITERAL
 
-comment ::= COMMENT_START END_OF_LINE_COMMENT
+//comment ::= COMMENT_START END_OF_LINE_COMMENT
 
-comment_or_eol ::= (comment | eol)
+//comment_or_eol ::= (comment | eol)
